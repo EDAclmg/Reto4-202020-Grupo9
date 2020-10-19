@@ -11,7 +11,7 @@ public class BST<K extends Comparable<K>, V extends Comparable <V>> implements T
 	/**
 	 * Representa el nodo de raiz.
 	 */
-	private NodoArbol<K, V> raiz;
+	private NodoArbolBST<K, V> raiz;
 
 	/**
 	 * Metodo constructor.
@@ -75,7 +75,7 @@ public class BST<K extends Comparable<K>, V extends Comparable <V>> implements T
 	{
 		tamanoActual++;
 		if(raiz == null)
-			raiz = new NodoArbol<K,V>(pKey, pValue);
+			raiz = new NodoArbolBST<K,V>(pKey, pValue);
 		else
 			raiz.put(pKey, pValue);
 

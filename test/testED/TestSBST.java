@@ -8,7 +8,7 @@ import org.junit.Test;
 import estructuras_de_datos.ArregloDinamico;
 import estructuras_de_datos.BST;
 import estructuras_de_datos.Lista;
-import estructuras_de_datos.NodoArbol;
+import estructuras_de_datos.NodoArbolBST;
 
 public class TestSBST 
 {

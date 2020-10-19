@@ -1,6 +1,6 @@
 package estructuras_de_datos;
 
-public class NodoArbol<K extends Comparable<K>, V extends Comparable<V> > implements Comparable<NodoArbol<K,V>>
+public class NodoArbolBST<K extends Comparable<K>, V extends Comparable<V> > implements Comparable<NodoArbolBST<K,V>>
 {
 	/**
 	 * Representa la llave del nodo.
@@ -15,17 +15,17 @@ public class NodoArbol<K extends Comparable<K>, V extends Comparable<V> > implem
 	/**
 	 * Representa el nodo de la izquierda.
 	 */
-	private NodoArbol<K, V> izq;
+	private NodoArbolBST<K, V> izq;
 
 	/**
 	 * Representa el nodo de la derecha.
 	 */
-	private NodoArbol<K, V> der;
+	private NodoArbolBST<K, V> der;
 
 	/**
 	 * Metodo constructor.
 	 */
-	public NodoArbol(K pKey,V pValue)
+	public NodoArbolBST(K pKey,V pValue)
 	{
 		izq = null;
 		der = null;
@@ -52,7 +52,7 @@ public class NodoArbol<K extends Comparable<K>, V extends Comparable<V> > implem
 	/**
 	 * Retorna el nodo de la izquierda.
 	 */
-	public NodoArbol< K, V> getLeft()
+	public NodoArbolBST< K, V> getLeft()
 	{
 		return izq;
 	}
@@ -60,7 +60,7 @@ public class NodoArbol<K extends Comparable<K>, V extends Comparable<V> > implem
 	/**
 	 * Retorna el nodo de la derecha.
 	 */
-	public NodoArbol< K, V> getRight()
+	public NodoArbolBST< K, V> getRight()
 	{
 		return der;
 	}
@@ -112,14 +112,14 @@ public class NodoArbol<K extends Comparable<K>, V extends Comparable<V> > implem
 		if(pKey.compareTo(key) > 0)
 		{
 			if(der == null)
-				der = new NodoArbol<K, V>(pKey, pValue);
+				der = new NodoArbolBST<K, V>(pKey, pValue);
 			else
 				der.put(pKey, pValue);
 		}
 		else if(pKey.compareTo(key) < 0)
 		{
 			if(izq == null)
-				izq = new NodoArbol<K, V>(pKey, pValue);
+				izq = new NodoArbolBST<K, V>(pKey, pValue);
 			else
 				izq.put(pKey, pValue);
 		}
@@ -210,7 +210,7 @@ public class NodoArbol<K extends Comparable<K>, V extends Comparable<V> > implem
 	/**
 	 * Metodo aparentemente inutil.
 	 */
-	public int compareTo(NodoArbol<K, V> nodo) 
+	public int compareTo(NodoArbolBST<K, V> nodo) 
 	{
 
 		return nodo.getKey().compareTo(key);
