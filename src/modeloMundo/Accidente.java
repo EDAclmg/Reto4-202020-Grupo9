@@ -219,7 +219,7 @@ public class Accidente implements Comparable<Accidente>
 	{
 		id = pId;
 		source = pSource;
-		tmc = pTmc != null ? Double.parseDouble(pTmc):0;
+		tmc = !pTmc.equals("") ? Double.parseDouble(pTmc):0;
 		severity = pSeverity;
 		SimpleDateFormat forma = new SimpleDateFormat("yyyy-MM-dd");
 		try {
