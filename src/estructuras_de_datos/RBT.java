@@ -11,7 +11,7 @@ public class RBT<K extends Comparable<K>, V extends Comparable <V>> implements T
 	/**
 	 * Representa el nodo de raiz.
 	 */
-	private NodoArbolBST<K, V> raiz;
+	private NodoArbolRBT<K, V> raiz;
 
 	/**
 	 * Metodo constructor.
@@ -75,10 +75,12 @@ public class RBT<K extends Comparable<K>, V extends Comparable <V>> implements T
 	{
 		tamanoActual++;
 		if(raiz == null)
-			raiz = new NodoArbolBST<K,V>(pKey, pValue);
+			raiz = new NodoArbolRBT<K,V>(pKey, pValue);
 		else
 			raiz.put(pKey, pValue);
-
+		if(raiz.getColor( ) == true)
+			raiz.changeColor( );
+		verificarInvariante( );
 	}
 
 	@Override
@@ -144,7 +146,12 @@ public class RBT<K extends Comparable<K>, V extends Comparable <V>> implements T
 			raiz.valuesInRange(llaves, init, end);
 		return llaves;
 	}
-
-
-
+	
+	/**
+	 * Verifica el invariante
+	 */
+	private void verificarInvariante()
+	{
+		assert raiz.getColor( ) == false;
+	}
 }

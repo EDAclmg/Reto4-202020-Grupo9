@@ -34,6 +34,16 @@ public class View
 			System.out.println("Opcion3. 2018");
 			System.out.println("Opcion4. 2019");
 			System.out.println("Opcion5. Todos los anteriores.");
-			
-		}		
+			System.out.println("Opcion6. Cargar unicamente en un arbol BST y ver su tiempo de carga.");
+			System.out.println("Opcion7. Cargar unicamente en un arbol RBT y ver su tiempo de carga.");
+		}
+		public void printYearSelectionCorto( ) 
+		{
+			System.out.println("Hola! Seleccione el anio a cargar, por el metodo decidido");
+			System.out.println("Opcion1. 2016");
+			System.out.println("Opcion2. 2017");
+			System.out.println("Opcion3. 2018");
+			System.out.println("Opcion4. 2019");
+			System.out.println("Opcion5. Todos los anteriores.");
+		}	
 }

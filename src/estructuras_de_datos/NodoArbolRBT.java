@@ -29,7 +29,7 @@ public class NodoArbolRBT<K extends Comparable<K>, V extends Comparable<V> > imp
 
 	private final static boolean RED = true;
 
-	private final static boolean BLACK = true;
+	private final static boolean BLACK = false;
 
 	/**
 	 * Metodo constructor.
@@ -99,6 +99,10 @@ public class NodoArbolRBT<K extends Comparable<K>, V extends Comparable<V> > imp
 	{
 		value = nValue;
 	}
+	public void changeKey( K nKey )
+	{
+		key = nKey;
+	}
 
 	/**
 	 * Retorna el elemento con la llave buscada.
@@ -156,11 +160,12 @@ public class NodoArbolRBT<K extends Comparable<K>, V extends Comparable<V> > imp
 			key = pKey;
 			value = pValue;
 		}
-		
-		
+
+
 		if( isRed( der ) && !isRed(izq)) rotacionIzquierda( );
 		if( isRed( izq ) && izq != null && isRed( izq.getLeft( ) )) rotacionDerecha( );
 		if( isRed( der ) && isRed(izq) ) flipColors( );
+		verificarInvariante( );
 
 	}
 
@@ -178,42 +183,48 @@ public class NodoArbolRBT<K extends Comparable<K>, V extends Comparable<V> > imp
 
 	public void rotacionDerecha( ) 
 	{
-		V temp = value;
+		V tempV = value;
+		K tempK = key;
 		this.changeValue(izq.getValue( ));
-		izq.changeValue(temp);
-		
+		this.changeKey(izq.getKey( ));
+		izq.changeValue(tempV);
+		izq.changeKey(tempK);
+
 		NodoArbolRBT<K,V> right = der;
 		NodoArbolRBT<K,V> leftChange = izq.getRight( );
-		
+
 		der = izq;
 		izq = izq.getLeft( );
-		
-		der.changeLeft(right);
-		der.changeRight(leftChange);
+
+		der.changeLeft(leftChange);
+		der.changeRight(right);
 	}
 
 	public void rotacionIzquierda( ) 
 	{
-		V temp = value;
+		V tempV = value;
+		K tempK = key;
 		this.changeValue(der.getValue( ));
-		der.changeValue(temp);
-		
+		this.changeKey(der.getKey( ));
+		der.changeKey(tempK);
+		der.changeValue(tempV);
+
 		NodoArbolRBT<K,V> left = izq;
 		NodoArbolRBT<K,V> rightChange = der.getLeft( );
-		
+
 		izq = der;
 		der = der.getRight( );
-		
+
 		izq.changeLeft(left);
 		izq.changeRight(rightChange);
-		
+
 	}
-	
+
 	public void changeLeft(NodoArbolRBT<K,V> pIzq)
 	{
 		izq = pIzq;
 	}
-	
+
 	public void changeRight(NodoArbolRBT<K,V> pDer)
 	{
 		der = pDer;
@@ -271,12 +282,22 @@ public class NodoArbolRBT<K extends Comparable<K>, V extends Comparable<V> > imp
 	 */
 	public void keysInRange(ArregloDinamico<K> llaves, K init, K end) 
 	{
-		if(izq != null && init.compareTo(izq.getKey()) < 0)
-			izq.keysInRange(llaves, init, end);
+		if(izq != null)
+		{
+			if(isInRange(izq.getRight( ), init, end))
+				izq.getRight( ).keysInRange(llaves, init, end);
+			if(init.compareTo(izq.getKey()) <= 0)
+				izq.keysInRange(llaves, init, end);
+		}
 		if(key.compareTo(init) >= 0 && key.compareTo(end) <= 0)
 			llaves.addLast(key);
-		if(der != null && end.compareTo(der.getKey()) > 0)
-			der.keysInRange(llaves, init, end);
+		if(der != null)
+		{
+			if( isInRange(der.getLeft(), init, end))
+				der.getLeft( ).keysInRange(llaves, init, end);
+			if(end.compareTo(der.getKey()) >= 0)
+				der.keysInRange(llaves, init, end);
+		}
 	}
 
 	/**
@@ -287,12 +308,29 @@ public class NodoArbolRBT<K extends Comparable<K>, V extends Comparable<V> > imp
 	 */
 	public void valuesInRange(ArregloDinamico<V> valores, K init, K end) 
 	{
-		if(izq != null && init.compareTo(izq.getKey()) < 0)
-			izq.valuesInRange(valores, init, end);
+		if(izq != null)
+		{
+			if(isInRange(izq.getRight( ), init, end))
+				izq.getRight( ).valuesInRange(valores, init, end);
+			if(init.compareTo(izq.getKey()) <= 0)
+				izq.valuesInRange(valores, init, end);
+		}
 		if(key.compareTo(init) >= 0 && key.compareTo(end) <= 0)
 			valores.addLast(value);
-		if(der != null && end.compareTo(der.getKey()) > 0)
-			der.valuesInRange(valores, init, end);
+		if(der != null)
+		{
+			if( isInRange(der.getLeft(), init, end))
+				der.getLeft( ).valuesInRange(valores, init, end);
+			if(end.compareTo(der.getKey()) >= 0)
+				der.valuesInRange(valores, init, end);
+		}
+	}
+
+	private boolean isInRange(NodoArbolRBT<K, V> nodo, K init, K end) 
+	{
+		if(nodo != null && nodo.getKey( ).compareTo(init) >= 0 && key.compareTo(end) <= 0)
+			return true;
+		return false;
 	}
 
 	/**
@@ -302,5 +340,15 @@ public class NodoArbolRBT<K extends Comparable<K>, V extends Comparable<V> > imp
 	{
 
 		return nodo.getKey().compareTo(key);
+	}
+
+	/**
+	 * Verifica el invariante
+	 */
+	private void verificarInvariante( )
+	{
+		assert !isRed( der );
+		assert !isRed( izq ) || (isRed( izq ) && izq != null && !isRed( izq.getLeft( ) ));
+		assert !isRed( izq ) || (isRed( izq ) && !isRed( der ));
 	}
 }

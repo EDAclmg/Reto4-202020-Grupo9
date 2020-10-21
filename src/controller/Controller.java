@@ -34,8 +34,38 @@ public class Controller {
 		modelo = new Central( ); 
 		view.printYearSelection( );
 		int anio = lector.nextInt( );
-		String datos = validarYear( anio);
-		modelo.cargarDatos(datos);
+		if( anio == 6 || anio == 7)
+		{
+			view.printYearSelectionCorto();
+			int anio2 = lector.nextInt();
+			String datos = validarYear(anio2);
+			if(anio == 6)
+			{
+				long startTime = System.currentTimeMillis();
+				modelo.cargarDatosBST(datos);
+				long endTime = System.currentTimeMillis();
+				System.out.println("El tiempo de carga fue de: " + (endTime - startTime) + " milisegundos");
+				System.out.println("Gracias por utilizar el programa");
+				System.exit(0);
+				run( );
+			}
+
+
+			else
+			{
+				long startTime = System.currentTimeMillis();
+				modelo.cargarDatosRBT(datos);
+				long endTime = System.currentTimeMillis();
+				System.out.println("El tiempo de carga fue de: " + (endTime - startTime) + " milisegundos");
+				System.out.println("Gracias por utilizar el programa");
+				System.exit(0);
+			}
+		}
+		else
+		{
+			String datos = validarYear(anio);
+			modelo.cargarDatos(datos);
+		}
 		while( !fin )
 		{
 			view.printMenu( );
@@ -119,38 +149,43 @@ public class Controller {
 				}
 
 				break;
+			default:
+				view.printMessage("El numero ingresado no corresponde a una opcion, intente de nuevo.");
+				break;
 			}
 		}
 	}
 
-	private String validarYear(int anio) 
-	{
-		String resp = "";
-		switch(anio)
+	
+
+		private String validarYear(int anio) 
 		{
-		case 1:
-			resp = "./data/us_accidents_dis_2016.csv";
-			break;
-			
-		case 2:
-			resp = "./data/us_accidents_dis_2017.csv";
-			break;
-			
-		case 3:
-			resp = "./data/us_accidents_dis_2018.csv";
-			break;
-			
-		case 4:
-			resp = "./data/us_accidents_dis_2019.csv";
-			break;
-			
-		case 5:
-			resp = "./data/US_Accidents_Dec19.csv";
-			break;
-		default:
-			resp = "./data/us_accidents_small.csv";
-			break;
+			String resp = "";
+			switch(anio)
+			{
+			case 1:
+				resp = "./data/us_accidents_dis_2016.csv";
+				break;
+
+			case 2:
+				resp = "./data/us_accidents_dis_2017.csv";
+				break;
+
+			case 3:
+				resp = "./data/us_accidents_dis_2018.csv";
+				break;
+
+			case 4:
+				resp = "./data/us_accidents_dis_2019.csv";
+				break;
+
+			case 5:
+				resp = "./data/US_Accidents_Dec19.csv";
+				break;
+			default:
+				resp = "./data/us_accidents_small.csv";
+				break;
+			}
+			return resp;
 		}
-		return resp;
 	}
-}
