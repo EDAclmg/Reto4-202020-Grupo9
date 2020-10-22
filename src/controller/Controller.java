@@ -110,6 +110,7 @@ public class Controller {
 						Lista<Double> sev = modelo.accidentesPorSeveridad(temp);
 						for(int i = 1; i <= 4; i++)
 							view.printMessage("El numero de accidentes por severidad de grado " + i + " es: " + (int) (double) sev.getElement(i) + ".");
+						view.printMessage("");
 					}
 					else
 						view.printMessage("No se encontro el anio ingresado");
