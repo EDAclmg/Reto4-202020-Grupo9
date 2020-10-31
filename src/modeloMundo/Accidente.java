@@ -221,7 +221,7 @@ public class Accidente implements Comparable<Accidente>
 		source = pSource;
 		tmc = !pTmc.equals("") ? Double.parseDouble(pTmc):0;
 		severity = pSeverity;
-		SimpleDateFormat forma = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat forma = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		try {
 			startTime = forma.parse(pStartTime);
 		} catch (ParseException e) {
@@ -282,12 +282,31 @@ public class Accidente implements Comparable<Accidente>
 	@Override
 	public int compareTo(Accidente arg0) 
 	{
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	public Double getSeverity() {
-		// TODO Auto-generated method stub
+	public Double getSeverity() 
+	{
 		return severity;
+	}
+
+	public Date getStartTime() 
+	{
+		return startTime;
+	}
+
+	public String getEstado() 
+	{
+		return state;
+	}
+
+	public Double getLat() 
+	{
+		return startLat;
+	}
+	
+	public Double getLon() 
+	{
+		return startLng;
 	}
 }
