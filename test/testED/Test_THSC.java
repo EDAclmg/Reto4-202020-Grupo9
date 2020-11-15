@@ -7,16 +7,17 @@ import org.junit.Test;
 
 import estructuras_de_datos.NodoHash;
 import estructuras_de_datos.TablaHashLinearProbing;
+import estructuras_de_datos.TablaHashSeparateChaining;
 
-public class Test_THLinearProbing 
+public class Test_THSC 
 {
-	private TablaHashLinearProbing<String, NodoHash<String,String>> prueba;
+	private TablaHashSeparateChaining<String, NodoHash<String,String>> prueba;
 	private int m = 10;
 	
 	@Before
 	public void setUp1()
 	{
-		prueba = new TablaHashLinearProbing<String, NodoHash<String,String>>(m);
+		prueba = new TablaHashSeparateChaining<String, NodoHash<String,String>>(m);
 	}
 
 	@Test
@@ -66,9 +67,9 @@ public class Test_THLinearProbing
 	{
 		NodoHash<String,String> act = new NodoHash<String,String>("A10","Revisar1");
 		prueba.put("A10",act);
-		assertFalse(prueba.isEmpty());	
+		assertFalse(prueba.isEmpty( ));	
 		prueba.remove("A10");
-		assertTrue(prueba.isEmpty());		
+		assertTrue(prueba.isEmpty( ));		
 	}
 
 	@Test
@@ -87,6 +88,6 @@ public class Test_THLinearProbing
 		prueba.put("A10",act);
 		prueba.rehash();
 		assertTrue(prueba.contains("A10"));
-		assertTrue(prueba.size() == 1 );
+		assertTrue(prueba.size( ) == 1 );
 	}
 }

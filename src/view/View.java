@@ -15,50 +15,56 @@ public class View
 	    	
 	    }
 	    
+	    /**
+	     * Imprime el menu.
+	     */
 	    public void printMenu()
 		{
-	    	printSeparador();
+	    	printSeparador( );
 			System.out.println("Hola! Seleccione la opcion a su gusto.");
-			System.out.println(" ");
-			System.out.println("1. Ver la informacion basica de los accidentes.");
-			System.out.println("2. Ver el total de accidentes por fecha con un arbol BST.");
-			System.out.println("3. Ver el total de accidentes por fecha con un arbol RBT.");
-			System.out.println("4. Ver el total de accidentes anteriores a una fecha.");
-			System.out.println("5. Ver el total de accidentes en un rango de fechas.");
-			System.out.println("6. Ver el estado y fecha con mas accidentes.");
-			System.out.println("7. Ver los accidentes por rango de horas.");
-			System.out.println("8. Ver los accidentes dentro de un rango.");
-			printSeparador();
+			System.out.println("1. Ver la informacion de carga.");
+			System.out.println("2. Consultar el grado de una estacion.");
+			System.out.println("3. Salir del programa");
+			printSeparador( );
 		}
 
+	    /**
+	     * Imprime un mensaje.
+	     */
 		public void printMessage(String mensaje) 
 		{
 			System.out.println(mensaje);
 		}
 		
+		/**
+	     * Imprime el separador.
+	     */
 		public void printSeparador( ) 
 		{
 			System.out.println("                   -                   -                    -                    -                    -                    -                    -                    -");
 		}
-
-		public void printYearSelection( ) 
+		
+		/**
+	     * Imprime la seleccion de los archivos.
+	     */
+		public void printFileSelection( ) 
 		{
-			System.out.println("Hola! Seleccione el anio a cargar");
-			System.out.println("Opcion1. 2016");
-			System.out.println("Opcion2. 2017");
-			System.out.println("Opcion3. 2018");
-			System.out.println("Opcion4. 2019");
-			System.out.println("Opcion5. Todos los anteriores.");
-			System.out.println("Opcion6. Cargar unicamente en un arbol BST y ver su tiempo de carga.");
-			System.out.println("Opcion7. Cargar unicamente en un arbol RBT y ver su tiempo de carga.");
-		}
-		public void printYearSelectionCorto( ) 
-		{
-			System.out.println("Hola! Seleccione el anio a cargar, por el metodo decidido");
-			System.out.println("1. 2016");
-			System.out.println("2. 2017");
-			System.out.println("3. 2018");
-			System.out.println("4. 2019");
+			System.out.println("Hola! Seleccione el archivo a cargar.");
+			System.out.println("1. Datos 201801-1 ");
+			System.out.println("2. Datos 201801-2 ");
+			System.out.println("3. Datos 201801-3");
+			System.out.println("4. Datos 201801-4");
 			System.out.println("5. Todos los anteriores.");
+			System.out.println("6. Cargar mas de un archivo.");
+		}
+
+		public void elegirArchivos() 
+		{
+			System.out.println("Ingrese los numeros de los archivos a cargar separados por comas, y sin espacios. De la siguiente forma. #,#,#,#");
+			System.out.println("1. Datos 201801-1 ");
+			System.out.println("2. Datos 201801-2 ");
+			System.out.println("3. Datos 201801-3");
+			System.out.println("4. Datos 201801-4");
+		
 		}	
 }

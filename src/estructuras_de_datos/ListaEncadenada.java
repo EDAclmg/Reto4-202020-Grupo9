@@ -89,8 +89,8 @@ public class ListaEncadenada <T extends Comparable<T>> implements Lista<T>
 	 */
 	public T removeFirst( )
 	{ 
-		T temp = primerNodo.darInformacion();
-		primerNodo = primerNodo.darSiguiente();
+		T temp = primerNodo.darInformacion( );
+		primerNodo = primerNodo.darSiguiente( );
 		numNodos--;
 		return temp;	
 	}
@@ -132,7 +132,10 @@ public class ListaEncadenada <T extends Comparable<T>> implements Lista<T>
 		T retorno = null;
 		numNodos--;
 		if(pos == 0)
-			retorno = removeFirst();
+		{
+			numNodos++;
+			retorno = removeFirst( );
+		}
 
 		else 
 			retorno = primerNodo.deleteElement(pos);

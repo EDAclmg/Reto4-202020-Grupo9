@@ -37,13 +37,16 @@ public class TablaHashSeparateChaining < K extends Comparable<K>, V extends Comp
 	 * Representa la constante m utilizada en el MAD.
 	 */
 	private int m;
-	
+
 	/**
 	 * Representa el numero de rehash desde que se creo.
 	 */
 	private int nreHash; 
 
-
+	/**
+	 * Metodo constructor. 
+	 * @param size Tamanio inicial.
+	 */
 	public TablaHashSeparateChaining( int size ) 
 	{
 		m = Extras.getNextPrime((int) size/5);
@@ -52,18 +55,24 @@ public class TablaHashSeparateChaining < K extends Comparable<K>, V extends Comp
 		b  = (int) (Math.random() * (p-1)+1);
 		mapa = new ArregloDinamico<Bucket<K,V>> (m);
 		nreHash = 0;
-		for(int i = 1; i <= m;i++)
+		for(int i = 1; i <= m; i++)
 		{
 			mapa.changeInfo(i, new Bucket<K,V>(5));
 		}
 	}
 
+	/**
+	 * Agrega un nodo.
+	 */
 	public void put(K key, V value) 
 	{
-		if((darFactorDeCarga() + (1/m)) >= 5.0)
+		totalElementos++;
+		ajustarFactorDeCarga( );
+		if((darFactorDeCarga( ) + (1/m)) >= 5.0)
 			rehash( );
 		int pos = getPos(key);
-		Bucket<K,V> act = mapa.getElement(pos+1);
+		
+		Bucket<K,V> act = mapa.getElement(pos);
 		NodoHash<K,V> nuevo = new NodoHash<K,V>(key, value);
 		act.addToBucket(nuevo);
 		mapa.addAtPos(pos, act);
@@ -75,26 +84,28 @@ public class TablaHashSeparateChaining < K extends Comparable<K>, V extends Comp
 	public V get( K key ) 
 	{
 		int pos = getPos(key);
-		Bucket<K,V> bucket = mapa.getElement(pos+1);
+		Bucket<K,V> bucket = mapa.getElement(pos);
 		NodoHash<K,V> buscado = bucket.get(key);
-		return buscado == null? null: buscado.getValue();
+		return buscado == null? null: buscado.getValue( );
 	}
 
 	@Override
-	public V remove( K key) 
+	public V remove( K key ) 
 	{
+		totalElementos--;
 		int pos = getPos(key);
 		Bucket<K,V> bucket = mapa.getElement(pos);
 		NodoHash<K,V> buscado = bucket.remove(key);
-		verificarInvariante();
-		return buscado == null? null: buscado.getValue();
+		ajustarFactorDeCarga( );
+		verificarInvariante( );		
+		return buscado == null ? null: buscado.getValue( );
 	}
 
 
 	@Override
-	public boolean contains( K key) 
+	public boolean contains( K key ) 
 	{
-		return get(key) != null ? true:false;
+		return get(key) == null ? false : true;
 	}
 
 	/**
@@ -118,41 +129,46 @@ public class TablaHashSeparateChaining < K extends Comparable<K>, V extends Comp
 	public Lista<K> keySet() 
 	{
 		ArregloDinamico<K> result = new ArregloDinamico<K>(totalElementos);
-		int i = 0;
-		while(i < m)
+		int i = 1;
+		while(i <= m)
 		{
-			ArregloDinamico<NodoHash<K,V>> temp = mapa.getElement(i).getAll();
-			int j = 0;
-			while(j < temp.size())
+			ArregloDinamico<NodoHash<K,V>> temp = mapa.getElement(i).getAll( );
+			int j = 1;
+			while(j <= temp.size())
 			{
 				NodoHash<K,V> tElem = temp.getElement(j);
-				if(tElem != null && tElem.getKey() != null)
-					result.addLast(tElem.getKey());	
+				if(tElem != null && tElem.getKey( ) != null)
+					result.addLast(tElem.getKey( ));
+				j++;
 			}
 			i++;
 		}
 		return result;
 	}
-	
+
 	public Lista<NodoHash<K,V>> getAll() 
 	{
 		ArregloDinamico<NodoHash<K,V>> result = new ArregloDinamico<NodoHash<K,V>>(totalElementos);
-		int i = 0;
-		while(i < m)
+		int i = 1;
+		while(i <= m)
 		{
-			ArregloDinamico<NodoHash<K,V>> temp = mapa.getElement(i).getAll();
-			int j = 0;
-			while(j < temp.size())
+			if(mapa.getElement(i) != null)
 			{
-				NodoHash<K,V> tElem = temp.getElement(j);
-				if(tElem != null)
-					result.addLast(tElem);	
+				ArregloDinamico<NodoHash<K,V>> temp = mapa.getElement(i).getAll( );
+				int j = 1;
+				while(j <= temp.size( ))
+				{
+					NodoHash<K,V> tElem = temp.getElement(j);
+					if(tElem != null)
+						result.addLast(tElem);
+					j++;
+				}
 			}
 			i++;
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Retorna una lista con todas los valores almacenados en la Tabla.
 	 * @return Todas los valores almacenados en la Tabla.
@@ -160,54 +176,64 @@ public class TablaHashSeparateChaining < K extends Comparable<K>, V extends Comp
 	public Lista<V> valueSet() 
 	{
 		ArregloDinamico<V> result = new ArregloDinamico<V>(totalElementos);
-		int i = 0;
-		while(i < m)
+		int i = 1;
+		while(i <= m)
 		{
-			ArregloDinamico<NodoHash<K,V>> temp = mapa.getElement(i).getAll();
-			int j = 0;
-			while(j < temp.size())
+			ArregloDinamico<NodoHash<K,V>> temp = mapa.getElement(i).getAll( );
+			int j = 1;
+			while(j <= temp.size())
 			{
 				NodoHash<K,V> tElem = temp.getElement(j);
 				if(tElem != null && tElem.getValue() != null)
-					result.addLast(tElem.getValue());	
+					result.addLast(tElem.getValue( ));
+				j++;
 			}
 			i++;
 		}
 		return result;
 	}
-	
+
 	public int getPos(K key)
 	{
 		int hashInicial =  (a * key.hashCode( ) + b) % p;
 		int hashFinal = Math.abs(hashInicial) % m;
-		return hashFinal;
+		return hashFinal + 1;
 	}
-	
-	public double darFactorDeCarga()
+
+	public double darFactorDeCarga( )
 	{
-		return (0.0 + totalElementos)/(0.0 + m);
+		return factorDeCarga;
 	}
 	
-	public void rehash()
+	public void ajustarFactorDeCarga( )
+	{
+		factorDeCarga = (0.0 + totalElementos)/(0.0 + m);
+	}
+
+	public void rehash( )
 	{
 		nreHash++;
-		m = Extras.getNextPrime((2*m)/5);
+		int k = m;
+		m = Extras.getNextPrime(2*k);
 		p = Extras.getNextPrime(m);
 		a  = (int) (Math.random() * (p-1)+1);
 		b  = (int) (Math.random() * (p-1)+1);
 		Lista<NodoHash<K,V>> todo = getAll( );
+		totalElementos = 0;
 		mapa = new ArregloDinamico<Bucket<K,V>>(m);
-		for(int i = 0; i < mapa.size();i++)
+
+		for(int i = 1; i <= m ;i++)
 		{
 			mapa.changeInfo(i, new Bucket<K,V>(5));
 		}
-		for(int i = 0; i < todo.size();i++)
+
+		for(int j = 1; j <= todo.size( ); j++)
 		{
-			NodoHash<K,V> act= todo.getElement(i);
-			put(act.getKey(), act.getValue());
+			NodoHash<K,V> act = todo.getElement(j);
+			put(act.getKey( ), act.getValue( ));
 		}
 	}
-	
+
 	public int numeroReHash()
 	{
 		return nreHash;

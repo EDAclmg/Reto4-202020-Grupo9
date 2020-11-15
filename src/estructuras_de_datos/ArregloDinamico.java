@@ -74,7 +74,7 @@ public class ArregloDinamico < T extends Comparable<T>> implements Comparable<Ar
 			{
 				elementos[i] = copia[i];
 			} 
-		}	
+		}
 		elementos[tamanoAct] = elemento;
 		tamanoAct++;
 	}
@@ -118,11 +118,11 @@ public class ArregloDinamico < T extends Comparable<T>> implements Comparable<Ar
 
 	public T deleteElement(int pos)
 	{
-		int posicion = pos <= tamanoAct && pos > 0? (pos-1):tamanoAct--;
+		int posicion = pos <= tamanoAct && pos > 0? (pos-1) : tamanoAct + 1;
 		T temp = elementos[posicion];
 		elementos[posicion] = null;
 
-		for(int i = posicion; i+1 < tamanoAct;i++)
+		for(int i = posicion; i + 1 < tamanoAct;i++)
 			elementos[i] = elementos[i+1];
 
 		tamanoAct--;
@@ -170,18 +170,14 @@ public class ArregloDinamico < T extends Comparable<T>> implements Comparable<Ar
 	public void changeInfo (int pos, T elem)
 	{
 		int posicion = pos <= tamanoMax && pos > 0? (pos-1):-2;
-		if(posicion != -2)
-			elementos[posicion] = elem;
+		elementos[posicion] = elem;
 	}
 	
 	public void addAtPos (int pos, T elem)
 	{
 		int posicion = pos <= tamanoMax && pos > 0? (pos-1):-2;
-		if(posicion != -2)
-		{
-			elementos[posicion] = elem;
-			tamanoAct++;
-		}
+		elementos[posicion] = elem;
+		tamanoAct++;
 	}
 
 
