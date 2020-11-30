@@ -216,11 +216,11 @@ public class DiGraph <K extends Comparable<K>,V,C> implements Cloneable
 	 * Realiza el DFO del grafo.
 	 * @return Stack con un posible orden topologico.
 	 */
-	public Stack<Vertex<K,V,C>> topologicalOrder( )
+	public ListaEncadenada<Vertex<K,V,C>> topologicalOrder( )
 	{
-		Queue<Vertex<K,V,C>> pre = new LinkedList<Vertex<K,V,C>>( );
-		Queue<Vertex<K,V,C>> post = new LinkedList<Vertex<K,V,C>>( );
-		Stack<Vertex<K,V,C>> reversePost = new Stack<Vertex<K,V,C>>( );
+		ListaEncadenada<Vertex<K,V,C>> pre = new ListaEncadenada<Vertex<K,V,C>>( );
+		ListaEncadenada<Vertex<K,V,C>> post = new ListaEncadenada<Vertex<K,V,C>>( );
+		ListaEncadenada<Vertex<K,V,C>> reversePost = new ListaEncadenada<Vertex<K,V,C>>( );
 
 		Lista<Vertex<K, V, C>> vertices = vertices( );
 		int i = 1;
@@ -241,11 +241,11 @@ public class DiGraph <K extends Comparable<K>,V,C> implements Cloneable
 	 * @param post Queue post.
 	 * @param reversePost Stack reverse post.
 	 */
-	public void dfo(Vertex<K, V, C> vertice, Queue<Vertex<K, V, C>> pre, Queue<Vertex<K, V, C>> post, Stack<Vertex<K,V,C>> reversePost)
+	public void dfo(Vertex<K, V, C> vertice, ListaEncadenada<Vertex<K, V, C>> pre, ListaEncadenada<Vertex<K, V, C>> post, ListaEncadenada<Vertex<K,V,C>> reversePost)
 	{
 		Lista<Vertex<K, V, C>> adyacentes = vertice.vertices( );
 		vertice.mark( );
-		pre.add(vertice);
+		pre.addFirst(vertice);
 		for(int i = 1; i <= adyacentes.size( ); i++)
 		{
 			Vertex<K,V,C> act = adyacentes.getElement(i);
@@ -253,8 +253,8 @@ public class DiGraph <K extends Comparable<K>,V,C> implements Cloneable
 				dfo(act, pre, post, reversePost);
 
 		}
-		post.add(vertice);
-		if(!reversePost.contains(vertice)) reversePost.push(vertice);
+		post.addFirst(vertice);
+		if(-1 == reversePost.isPresent(vertice)) reversePost.addFirst(vertice);
 	}
 
 	/**
@@ -286,9 +286,9 @@ public class DiGraph <K extends Comparable<K>,V,C> implements Cloneable
 	 */
 	public int kosarajuSCC( )
 	{
-		Stack<Vertex<K,V,C>> invertido = reverse( ).topologicalOrder( );
+		ListaEncadenada<Vertex<K,V,C>> invertido = reverse( ).topologicalOrder( );
 		unMark( );
-		Vertex<K,V,C> actual = invertido.pop( );
+		Vertex<K,V,C> actual = invertido.removeFirst( );
 		int SCC = 1;
 		while(actual != null)
 		{
@@ -297,7 +297,7 @@ public class DiGraph <K extends Comparable<K>,V,C> implements Cloneable
 				dfs(actual.getId( ), SCC);
 				SCC++;
 			}
-			actual = invertido.size( ) != 0 ? invertido.pop( ) : null;
+			actual = invertido.size( ) != 0 ? invertido.removeFirst( ) : null;
 		}
 		return SCC;
 	}
