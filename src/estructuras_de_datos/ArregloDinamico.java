@@ -8,7 +8,7 @@ package estructuras_de_datos;
  * @author Fernando De la Rosa
  *
  */
-public class ArregloDinamico < T extends Comparable<T>> implements Comparable<ArregloDinamico<T>>, Lista<T> {
+public class ArregloDinamico < T extends Comparable<T>> implements Comparable<ArregloDinamico<T>>, Lista<T>, Cloneable {
 
 	/**
 	 * Capacidad maxima del arreglo
@@ -81,21 +81,29 @@ public class ArregloDinamico < T extends Comparable<T>> implements Comparable<Ar
 
 	public void  insertElement(T element, int pos)
 	{
-		int posicion = pos <= tamanoMax && pos > 0 ? (pos-1):tamanoAct-1;
+		
 		T[ ] temp = elementos;
+		elementos =(T[]) new Comparable[tamanoMax];
 		if(tamanoAct == tamanoMax)
 			tamanoMax *= 2;
-
-		elementos =(T[]) new Comparable[tamanoMax];
+		
+		
+		int posicion = pos <= tamanoMax && pos > 0 ? (pos-1):-1;
+		if(elementos[posicion] == null) tamanoAct++; 
 		elementos[posicion] = element;
+		
 		for(int i = 0; i < posicion;i++)
 			elementos[i] = temp[i];
 		for(int i = posicion; i < tamanoAct;i++)
-			elementos[i+1] = temp[i];
-
-		tamanoAct++; 
+			elementos[i+1] = temp[i];	
 	}
-
+	
+	public void addAtPos (T elem, int pos)
+	{
+		int posicion = pos <= tamanoMax && pos > 0? (pos-1):-2;
+		if(elementos[posicion] == null) tamanoAct++; 
+		elementos[posicion] = elem;
+	}
 	public T removeFirst( )
 	{
 		T temp = elementos[0];
@@ -158,6 +166,7 @@ public class ArregloDinamico < T extends Comparable<T>> implements Comparable<Ar
 
 		return resp;
 	}
+	
 	public void exchange (int pos1, int pos2)
 	{
 		int posicion1 = pos1 <= tamanoAct && pos1 > 0? (pos1-1):null;
@@ -173,14 +182,6 @@ public class ArregloDinamico < T extends Comparable<T>> implements Comparable<Ar
 		elementos[posicion] = elem;
 	}
 	
-	public void addAtPos (int pos, T elem)
-	{
-		int posicion = pos <= tamanoMax && pos > 0? (pos-1):-2;
-		elementos[posicion] = elem;
-		tamanoAct++;
-	}
-
-
 	public int darTamano() 
 	{
 		return tamanoAct;
@@ -191,7 +192,24 @@ public class ArregloDinamico < T extends Comparable<T>> implements Comparable<Ar
 		return elementos;
 	}
 
-
+	/**
+	 * Vacia la lista
+	 */
+	public void clean( ) 
+	{
+		tamanoAct = 0;
+		elementos =(T[]) new Comparable[tamanoMax];
+	}
+	
+	public ArregloDinamico<T> clone( )
+	{
+		try {
+			return (ArregloDinamico<T>) super.clone( );
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			return null;
+		}
+	}
 	@Override
 	public int compareTo(ArregloDinamico o) 
 	{
@@ -200,12 +218,3 @@ public class ArregloDinamico < T extends Comparable<T>> implements Comparable<Ar
 	}
 
 }
-
-
-
-
-
-
-
-
-

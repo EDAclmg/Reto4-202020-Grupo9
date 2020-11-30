@@ -2,6 +2,11 @@ package testED;
 
 import static org.junit.Assert.*;
 
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Stack;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,6 +15,7 @@ import estructuras_de_datos.BST;
 import estructuras_de_datos.DiGraph;
 import estructuras_de_datos.Edge;
 import estructuras_de_datos.Lista;
+import estructuras_de_datos.ListaEncadenada;
 import estructuras_de_datos.NodoHash;
 import estructuras_de_datos.Vertex;
 
@@ -19,14 +25,14 @@ public class Test_DiGraph
 	private DiGraph<String, String,String> grafo;
 
 	private String abc;
-	
+
 	@Before
 	public void setUp1( )
 	{
 		grafo = new DiGraph<String, String,String>( );
 		abc = "ABCDEFGHIJKLNOPQRSTUVWXYZ";
 	}
-	
+
 	public void setUp2( )
 	{
 		for(int i = 0 ; i < abc.length( ); i++)
@@ -34,7 +40,7 @@ public class Test_DiGraph
 			grafo.insertVertex("" + abc.charAt(i), "" + abc.charAt(i) );
 		}
 	}
-	
+
 	public void setUp3( )
 	{
 		for(int i = 0 ; i < abc.length( ) - 1; i++)
@@ -42,7 +48,7 @@ public class Test_DiGraph
 			grafo.addEdge("" + abc.charAt(i), "" + abc.charAt(i + 1), i, "" + i);
 		}
 	}
-		
+
 	@Test
 	public void containsVertex( )
 	{
@@ -172,11 +178,11 @@ public class Test_DiGraph
 	public void edges( )
 	{
 		assertEquals(0, grafo.edges( ).size( ));
-		
+
 		setUp2( );
 		setUp3( );
 		assertEquals(abc.length( ) - 1, grafo.edges( ).size( ));
-		
+
 		Lista<Edge<String, String, String>> arcos = grafo.edges( );
 		for(int i = 0 ; i < abc.length( ) - 1; i++)
 		{ 
@@ -189,14 +195,98 @@ public class Test_DiGraph
 	public void vertices( )
 	{
 		assertEquals(0, grafo.vertices( ).size( ));
-		
+
 		setUp2( );
 		assertEquals(abc.length( ), grafo.vertices( ).size( ));
-		
+
 		Lista<Vertex<String, String, String>> vertices = grafo.vertices( );
 		for(int i = 0 ; i < abc.length( ); i++)
 		{ 
 			assertNotEquals(-1, vertices.isPresent(grafo.getVertex("" + abc.charAt(i))));
 		}
-	}	
+	}
+
+	@Test
+	public void bfs( )
+	{
+
+	}
+
+	@Test
+	public void topologicalOrder( )
+	{
+		for(int i = 0; i < 7; i++)
+			grafo.insertVertex(""+i, ""+i);
+		for(int i = 0; i < 2; i++)
+			grafo.addEdge("0", ""+ (i + 1), 0.0, null);
+		grafo.addEdge("0", "5", 0.0, null);
+		grafo.addEdge("1", "4", 0.0, null);
+		grafo.addEdge("3", "2", 0.0, null);
+		grafo.addEdge("3", "4", 0.0, null);
+		grafo.addEdge("3", "5", 0.0, null);
+		grafo.addEdge("3", "6", 0.0, null);
+		grafo.addEdge("5", "2", 0.0, null);
+		grafo.addEdge("6", "0", 0.0, null);
+		grafo.addEdge("6", "4", 0.0, null);
+		Stack<Vertex<String, String, String>> to = grafo.topologicalOrder( );
+		for(int i = 0; i < to.size( ); i++)
+			System.out.println(to.get(i).getId( ));
+
+	}
+
+	@Test
+	public void dfo( )
+	{
+
+	}
+
+	@Test
+	public void reverse( )
+	{
+		for(int i = 0; i < 7; i++)
+			grafo.insertVertex(""+i, ""+i);
+		for(int i = 0; i < 6; i++)
+			grafo.addEdge("" + i, ""+ (i + 1), 0.0, null);
+		DiGraph<String, String, String > inv = grafo.reverse( );
+		for(int i = 0; i < 6; i++)
+			assertEquals("" + (i + 1),inv.getEdge("" + (i + 1), ""+i ).getSource( ).getId( ));
+	}
+
+	@Test
+	public void kosarajuSCC( )
+	{
+		for(int i = 0; i < 7; i++)
+			grafo.insertVertex(""+i, ""+i);
+		for(int i = 0; i < 6; i++)
+			grafo.addEdge("" + i, ""+ (i + 1), 0.0, null);
+		assertEquals(1,grafo.kosarajuSCC( ));
+	}
+
+	@Test
+	public void unMark( ) 
+	{
+
+	}
+
+	@Test
+	public void dfs( )
+	{
+
+	}
+
+	@Test
+	public void getSCC( )
+	{
+
+	}
+
+	@Test
+	public void Dijkstra( )
+	{
+		for(int i = 0; i < 3; i++)
+			grafo.insertVertex(""+i, ""+i);
+		for(int i = 0; i < 2; i++)
+			grafo.addEdge("" + i, ""+ (i + 1), i + 1, null);
+		assertEquals(""+0,grafo.Dijkstra(0 + "", 1 +"").getElement(0).getId());
+	}
 }

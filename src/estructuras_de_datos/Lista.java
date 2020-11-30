@@ -92,4 +92,9 @@ public interface Lista <T extends Comparable<? extends T>> {
 	 */
 	T getElement( int i );
 
+	/**
+	 * Vacia la lista.
+	 */
+	void clean( );
+
 }

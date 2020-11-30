@@ -74,7 +74,7 @@ public class TablaHashLinearProbing < K extends Comparable<K>, V extends Compara
 		if(act == null || act.getKey( ).equals("EMPTY"))
 		{
 			NodoHash<K,V> nuevo = new NodoHash<K,V>(key, value);
-			mapa.addAtPos(pos, nuevo);
+			mapa.addAtPos(nuevo, pos);
 			totalElementos++;
 		}
 		

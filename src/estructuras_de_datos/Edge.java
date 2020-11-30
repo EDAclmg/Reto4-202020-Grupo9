@@ -1,6 +1,6 @@
 package estructuras_de_datos;
 
-public class Edge <K extends Comparable<K>,V, C> implements Comparable<Edge<K,V, C>>
+public class Edge <K extends Comparable<K>,V, C> implements Comparable<Edge<K,V, C>>, Cloneable
 {
 
 	/**
@@ -22,6 +22,8 @@ public class Edge <K extends Comparable<K>,V, C> implements Comparable<Edge<K,V,
 	 * Representa la informacion del arco.
 	 */
 	private C info;
+	
+	private int count;
 	
 	/**
 	 * Metodo constructor del arco.
@@ -83,13 +85,40 @@ public class Edge <K extends Comparable<K>,V, C> implements Comparable<Edge<K,V,
 	}
 	
 	/**
+	 * Crea un clone del arco y lo invierte.
+	 * @return Clone invertido.
+	 */
+	public Edge<K,V,C> reverseClone( )
+	{
+		Edge<K, V, C> clone = null;
+		try 
+		{
+			clone = (Edge<K, V, C>) this.clone( );
+		}
+		catch (CloneNotSupportedException e) 
+		{
+			e.printStackTrace();
+		}
+		clone.reverse( );
+		return clone;
+	}
+	
+	/**
+	 * Invierte el arco.
+	 */
+	public void reverse( )
+	{
+		Vertex<K,V,C> temp = source; 
+		source = dest;
+		dest = temp;
+	}
+	/**
 	 * Metodo inutil.
 	 */
-
 	@Override
-	public int compareTo(Edge<K, V, C> o) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int compareTo(Edge<K, V, C> o) 
+	{
+		return (int) (weight - o.weight);
 	}
 
 }

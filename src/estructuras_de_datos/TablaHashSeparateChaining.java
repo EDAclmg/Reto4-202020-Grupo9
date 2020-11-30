@@ -75,8 +75,8 @@ public class TablaHashSeparateChaining < K extends Comparable<K>, V extends Comp
 		Bucket<K,V> act = mapa.getElement(pos);
 		NodoHash<K,V> nuevo = new NodoHash<K,V>(key, value);
 		act.addToBucket(nuevo);
-		mapa.addAtPos(pos, act);
-		verificarInvariante();
+		mapa.addAtPos(act, pos);
+		verificarInvariante( );
 	}
 
 

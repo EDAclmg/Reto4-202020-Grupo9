@@ -1,5 +1,8 @@
 package estructuras_de_datos;
 
+import java.util.Queue;
+import java.util.Stack;
+
 public class Vertex< K extends Comparable<K>, V, C> implements Comparable<Vertex<K,V,C>>
 {
 
@@ -21,12 +24,32 @@ public class Vertex< K extends Comparable<K>, V, C> implements Comparable<Vertex
 	/**
 	 * Representa la lista de arcos del vertice.
 	 */
-	private Lista<Edge<K,V, C>> adjacentes;
+	private Lista<Edge<K,V, C>> adyacentes;
 
 	/**
 	 * Representa el numero de arcos entrantes.
 	 */
 	private int indegree;
+	
+	/**
+	 * Arco por donde se llego al vertice.
+	 */
+	private Edge<K,V,C> edgeTo;
+	
+	/**
+	 * Id del cluster al que pertenece.
+	 */
+	private int idCC;
+	
+	/**
+	 * Distancia del vertice.
+	 */
+	private int distancia;
+	
+	/**
+	 * Costo del vertice.
+	 */
+	private double costo;
 	/**
 	 * 
 	 * @param id
@@ -37,8 +60,12 @@ public class Vertex< K extends Comparable<K>, V, C> implements Comparable<Vertex
 		id = pId;
 		value = pValue;
 		marca = false;
-		adjacentes = new ListaEncadenada<Edge<K,V,C>>( );
+		adyacentes = new ArregloDinamico<Edge<K,V,C>>(15);
 		indegree = 0;
+		edgeTo = null;
+		idCC = -1;
+		distancia = -1;
+		costo = Double.MAX_VALUE;
 	}
 
 	/**
@@ -76,7 +103,7 @@ public class Vertex< K extends Comparable<K>, V, C> implements Comparable<Vertex
 	{
 		Edge<K,V,C> arco = getEdge( edge.getDest( ).getId( ));
 		if( arco == null)
-			adjacentes.addLast(edge);
+			adyacentes.addLast(edge);
 		else
 			arco.setWeight(edge.weight( ));
 	}
@@ -111,7 +138,7 @@ public class Vertex< K extends Comparable<K>, V, C> implements Comparable<Vertex
 	 */
 	public int outdegree( )
 	{
-		return adjacentes.size( );
+		return adyacentes.size( );
 	}
 
 	/**
@@ -131,9 +158,9 @@ public class Vertex< K extends Comparable<K>, V, C> implements Comparable<Vertex
 	public Edge<K,V,C> getEdge(K vertex)
 	{
 		Edge<K,V,C> retorno = null;
-		for(int i = 0; i < adjacentes.size( ) && retorno == null; i++)
+		for(int i = 1; i <= adyacentes.size( ) && retorno == null; i++)
 		{
-			Edge<K,V,C> act = adjacentes.getElement(i); 
+			Edge<K,V,C> act = adyacentes.getElement(i); 
 			if(act.getDest( ).getId( ).equals(vertex))
 				retorno = act;
 		}
@@ -146,9 +173,9 @@ public class Vertex< K extends Comparable<K>, V, C> implements Comparable<Vertex
 	 */
 	public Lista<Vertex<K,V,C>> vertices( )
 	{
-		Lista<Vertex<K,V,C>> retorno = new ListaEncadenada<Vertex<K,V,C>>( );
-		for(int i = 0; i < adjacentes.size( ); i++)
-			retorno.addLast(adjacentes.getElement(i).getDest( )); 
+		Lista<Vertex<K,V,C>> retorno = new ArregloDinamico<Vertex<K,V,C>>(adyacentes.size( ));
+		for(int i = 1; i <= adyacentes.size( ); i++)
+			retorno.addLast(adyacentes.getElement(i).getDest( )); 
 		
 		return retorno;
 	}
@@ -159,15 +186,93 @@ public class Vertex< K extends Comparable<K>, V, C> implements Comparable<Vertex
 	 */
 	public Lista<Edge<K,V,C>> edges( )
 	{
-		return adjacentes; 
+		return adyacentes; 
 	}
 
+	/**
+	 * Retorna el arco por el que se llego.
+	 * @return Edge to.
+	 */
+	public Edge<K,V,C> getEdgeTo( )
+	{
+		return edgeTo;
+	}
+	
+	/**
+	 * Relaja el costo para llegar al vertice si el parametro es menor al existente.
+	 * @param pCosto Costo a comparar.
+	 * @param pArco Arco nuevo.
+	 */
+	public boolean relajar(Double pCosto, Edge<K,V,C> pArco)
+	{
+		if(pCosto < costo)
+		{
+			costo = pCosto;
+			edgeTo = pArco;
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Retorna el costo para llegar al vertice.
+	 * @return Costo para llegar al vertice.
+	 */
+	public Double darCosto( ) 
+	{
+		return costo;
+	}
+	
+	/**
+	 * Le asigna el valor de su componente fuertemente concetado al vertice.
+	 * @param idCCP Valor del SCC al que corresponde.
+	 */
+	public void connect(int idCCP) 
+	{
+		idCC = idCCP;
+	}
+	
+	/**
+	 * Retorna el id del cluster al que pertence.
+	 * @return Id del cluster al que pertenece.
+	 */
+	public int getIdCC( )
+	{
+		return idCC;
+	}
+	
+	/**
+	 * Agrega los vertices pertenecientes al cluster.
+	 * @param idCCP Id del cluster a buscar.
+	 * @param cluster Lista con los elementos del cluster.
+	 */
+	public void getSCC(int idCCP, Lista<Vertex<K, V, C>> cluster)
+	{
+		for(int i = 1; i <= adyacentes.size( ); i++)
+		{
+			Vertex<K,V,C> act = adyacentes.getElement(i).getDest( );
+			if(act.getIdCC( ) == idCCP  && cluster.isPresent(act) == -1)
+				cluster.addLast(act);			
+		}
+	}
+	
+	public void bfs( int idCCP )
+	{
+		
+	}
+	
+	public void dfsbsf( Queue<K> pre, Queue<K> post, Stack<K> reversePost)
+	{
+		
+	}
+	
+	
 	/**
 	 * Metodo inutil
 	 */
 	@Override
-	public int compareTo(Vertex<K, V, C> o) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int compareTo(Vertex<K, V, C> o) 
+	{
+		return (int) (costo - o.darCosto( ));
 	}
 }

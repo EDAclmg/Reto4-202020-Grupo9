@@ -24,7 +24,13 @@ public class View
 			System.out.println("Hola! Seleccione la opcion a su gusto.");
 			System.out.println("1. Ver la informacion de carga.");
 			System.out.println("2. Consultar el grado de una estacion.");
-			System.out.println("3. Salir del programa");
+			System.out.println("3. Consultar sobre las estaciones fuertemente conectadas.");
+			System.out.println("4. Ver las estaciones criticas.");
+			System.out.println("5. Buscar recomendacion de ruta por edad.");
+			System.out.println("6. Buscar una ruta entre dos coordenadas.");
+			System.out.println("7. Identificar de estaciones para publicidad.");
+			System.out.println("8. Revisar el registro de una bicicleta.");
+			System.out.println("9. Salir del programa");
 			printSeparador( );
 		}
 

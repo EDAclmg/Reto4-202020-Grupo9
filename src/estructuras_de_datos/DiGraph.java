@@ -1,23 +1,31 @@
 package estructuras_de_datos;
 
-public class DiGraph <K extends Comparable<K>,V,C>
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Stack;
+
+import jdk.management.resource.internal.inst.SocketOutputStreamRMHooks;
+
+public class DiGraph <K extends Comparable<K>,V,C> implements Cloneable
 {
 
 	/**
 	 * Representa la Tabla de Hash por SC con los vertices.
 	 */
 	private TablaHashSeparateChaining<K,Vertex<K,V,C>> tabla;
-	
+
 	/**
 	 * Total de vertices insertados.
 	 */
 	private int vertices;
-	
+
 	/**
 	 * Total de arcos insertados.
 	 */
 	private int arcos;
-	
+
 	/**
 	 * Metodo constructor de la clase.
 	 */
@@ -85,12 +93,22 @@ public class DiGraph <K extends Comparable<K>,V,C>
 	{
 		Vertex<K,V,C> salida = tabla.get(source);
 		Vertex<K,V,C> destino = tabla.get(dest);
-		
+
 		Edge<K,V,C> nuevo = new Edge<K,V,C>(salida, destino, weight, pInfo);
 		salida.addEdge(nuevo);
-		
+
 		destino.receiveEdge( );
 		arcos++;
+	}
+
+	/**
+	 * Añade un arco dirigido pesado. Si el arco YA existe se modifica su peso.
+	 * @param nuevo Nuevo arco. 
+	 */
+	public void addEdge(Edge<K,V,C> nuevo)
+	{
+		nuevo.getSource( ).addEdge(nuevo);
+		nuevo.getDest( ).receiveEdge( );
 	}
 
 	/**
@@ -166,7 +184,7 @@ public class DiGraph <K extends Comparable<K>,V,C>
 		{
 			NodoHash<K, Vertex<K,V,C>> act = todo.getElement(i);
 			Lista<Edge<K,V,C>> arcos = act.getValue( ).edges( );
-			for(int j = 0; j < arcos.size( ); j++)
+			for(int j = 1; j <= arcos.size( ); j++)
 				retorno.addLast(arcos.getElement(j));
 		}
 		return retorno;
@@ -187,5 +205,213 @@ public class DiGraph <K extends Comparable<K>,V,C>
 			if(vertice != null) retorno.addLast(vertice);
 		}
 		return retorno;
+	}
+
+	public void bfs(K idP, int idCCP)
+	{
+
+	}
+
+	/**
+	 * Realiza el DFO del grafo.
+	 * @return Stack con un posible orden topologico.
+	 */
+	public Stack<Vertex<K,V,C>> topologicalOrder( )
+	{
+		Queue<Vertex<K,V,C>> pre = new LinkedList<Vertex<K,V,C>>( );
+		Queue<Vertex<K,V,C>> post = new LinkedList<Vertex<K,V,C>>( );
+		Stack<Vertex<K,V,C>> reversePost = new Stack<Vertex<K,V,C>>( );
+
+		Lista<Vertex<K, V, C>> vertices = vertices( );
+		int i = 1;
+		while( i <= vertices.size( ))
+		{
+			Vertex<K, V, C> inicial = vertices.getElement(i);
+			if(!inicial.getMark( ))
+				dfo(inicial, pre, post, reversePost);
+			i++;
+		}
+		return reversePost;
+	}
+
+	/**
+	 * Procesa recursivamente cada vertice del grafo.
+	 * @param vertice Vertice actual
+	 * @param pre Queue pre.
+	 * @param post Queue post.
+	 * @param reversePost Stack reverse post.
+	 */
+	public void dfo(Vertex<K, V, C> vertice, Queue<Vertex<K, V, C>> pre, Queue<Vertex<K, V, C>> post, Stack<Vertex<K,V,C>> reversePost)
+	{
+		Lista<Vertex<K, V, C>> adyacentes = vertice.vertices( );
+		vertice.mark( );
+		pre.add(vertice);
+		for(int i = 1; i <= adyacentes.size( ); i++)
+		{
+			Vertex<K,V,C> act = adyacentes.getElement(i);
+			if(!act.getMark( ))
+				dfo(act, pre, post, reversePost);
+
+		}
+		post.add(vertice);
+		if(!reversePost.contains(vertice)) reversePost.push(vertice);
+	}
+
+	/**
+	 * Returna un grafo invertido.
+	 * @return Grafo invertido.
+	 */
+	public DiGraph<K,V,C> reverse( )
+	{
+		DiGraph<K,V,C> clone = null;
+
+		try { clone  = (DiGraph<K, V, C>) this.clone( ); } 
+		catch (CloneNotSupportedException e) { e.printStackTrace(); }
+
+		Lista<Edge<K, V, C>> arcos = clone.edges( );
+		Lista<Vertex<K, V, C>> vertices = clone.vertices( );
+
+		for(int i = 1; i <= vertices.size( ); i++ )
+			vertices.getElement(i).edges( ).clean( );
+
+		for(int i = 1; i <= arcos.size( ); i++)
+			clone.addEdge(arcos.getElement(i).reverseClone( ));
+
+		return clone;
+	}
+
+	/**
+	 * Retorna el numero de SCC del grafo.
+	 * @return Numero de SCC del grafo.
+	 */
+	public int kosarajuSCC( )
+	{
+		Stack<Vertex<K,V,C>> invertido = reverse( ).topologicalOrder( );
+		unMark( );
+		Vertex<K,V,C> actual = invertido.pop( );
+		int SCC = 1;
+		while(actual != null)
+		{
+			if(!actual.getMark( ))
+			{
+				dfs(actual.getId( ), SCC);
+				SCC++;
+			}
+			actual = invertido.size( ) != 0 ? invertido.pop( ) : null;
+		}
+		return SCC;
+	}
+
+	/**
+	 * Desmarca todos los vertices del grafo.
+	 */
+	public void unMark( ) 
+	{
+		Lista<Vertex<K, V, C>> vertices = vertices( );
+		for(int i = 1; i <= vertices.size( ); i++)
+			vertices.getElement(i).unmark( );
+	}
+
+	/**
+	 * Hace el recorrido dfs recursivamente.
+	 * @param idP Id estacion de inicio.
+	 * @param idCCP Id Componente conectado.
+	 */
+	public void dfs(K idP, int idCCP)
+	{
+		Vertex<K,V,C> inicial = getVertex(idP);
+		inicial.connect(idCCP);
+		inicial.mark( );
+		Lista<Vertex<K,V,C>> adyacentes = inicial.vertices( );
+		for(int i = 1; i <= adyacentes.size( ); i++)
+		{
+			if(!adyacentes.getElement(i).getMark( ))
+				dfs(adyacentes.getElement(i).getId( ), idCCP);
+		}
+	}
+
+	public void dfsRestringido( Vertex<K,V,C> verticeActual, Vertex<K,V,C> inicio, ArregloDinamico<Vertex<K,V,C>> rutaActual,  ArregloDinamico<ArregloDinamico<Vertex<K,V,C>>> logrados) 
+	{
+		Lista<Vertex<K,V,C>> adyacentes = verticeActual.vertices( );
+		rutaActual.addLast(verticeActual);
+		for(int i = 1; i <= adyacentes.size( ); i++)
+		{
+			Vertex<K,V,C> siguiente = adyacentes.getElement(i);
+			if(inicio.equals(siguiente))
+				logrados.addLast(rutaActual);
+
+
+			else if( siguiente.getIdCC( ) == verticeActual.getIdCC( ) && rutaActual.isPresent(siguiente) == -1)
+			{
+				ArregloDinamico<Vertex<K,V,C>> clone = rutaActual.clone( );
+				dfsRestringido( siguiente, inicio, clone, logrados);
+			}
+		}
+	}
+
+
+	/**
+	 * Retorna todo el componente fuertemente conectado.
+	 * @param idP Id de un nodo pertenenciente al SCC.
+	 * @return Lista de todos los vertices que lo componen.
+	 */
+	public Lista<Vertex<K, V, C>> getSCC(K idP)
+	{
+		int idCC = getVertex(idP).getIdCC( );
+		Lista<NodoHash<K,Vertex<K,V,C>>> todo = tabla.getAll( );
+		Lista<Vertex<K,V,C>> retorno = new ArregloDinamico<Vertex<K,V,C>>(vertices);
+		for(int i = 1; i <= todo.size( ); i++)
+		{
+			NodoHash<K, Vertex<K,V,C>> act = todo.getElement(i);
+			Vertex<K,V,C> vertice = act.getValue( );
+			if(vertice != null && vertice.getIdCC( ) == idCC) retorno.addLast(vertice);
+		}
+		return retorno;
+	}
+
+	public Lista<Vertex<K,V,C>> Dijkstra( K idP , K idD)
+	{
+		Vertex<K,V,C> salida = getVertex(idP);
+		IndexMinPQ<Vertex<K, V, C>> pq = new IndexMinPQ<Vertex<K,V,C>>(107594);
+		salida.relajar(0.0, null);
+		dijkstraRecursivo(salida, pq,0);
+
+		Lista<Vertex<K,V,C>> ruta = new ListaEncadenada<Vertex<K,V,C>>( );
+		Vertex<K,V,C> llegada = getVertex(idD);
+
+		Edge<K,V,C> arco = llegada.getEdgeTo( );
+		while(arco != null)
+		{
+			ruta.addFirst(arco.getSource( ));
+			arco = arco.getSource( ).getEdgeTo( );
+		}
+		return ruta;
+	}
+
+	public void dijkstraRecursivo(Vertex<K,V,C> verticeActual, IndexMinPQ<Vertex<K, V, C>> pq, int inserted)
+	{
+		Lista<Edge<K, V, C>> arcos = verticeActual.edges( );
+		for(int i = 1; i <= arcos.size( ); i++)
+		{
+			Edge<K,V,C> actual = arcos.getElement(i);
+			if (actual.getDest( ).relajar(verticeActual.darCosto( ) + actual.weight( ), actual))
+			{
+				int pos = pq.getIndex(actual.getDest( ));
+				if(pos != -1)
+					pq.decreaseKey(pos, actual.getDest( ));
+				else
+				{
+					pq.insert(inserted, actual.getDest( ));
+					inserted++;
+				}
+			}
+
+		}
+		if(pq.size( ) != 0)
+		{
+			Edge<K, V, C> next = pq.minKey( ).getEdgeTo( );
+			pq.delMin( );
+			dijkstraRecursivo(next.getDest( ), pq, inserted);
+		}
 	}
 }

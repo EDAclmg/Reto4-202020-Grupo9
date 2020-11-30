@@ -231,5 +231,15 @@ public class ListaEncadenada <T extends Comparable<T>> implements Lista<T>
 	{
 		return primerNodo.getNodo(i);
 	}
+	
+	/**
+	 * Vacia la lista
+	 */
+	public void clean( ) 
+	{
+		numNodos = 0;
+		primerNodo = null;
+		ultimoNodo = null;
+	}
 
 }

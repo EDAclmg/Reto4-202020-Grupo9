@@ -2,7 +2,9 @@ package modeloMundo;
 
 import java.util.Date;
 
-public class Impulso implements Comparable<Impulso>
+import estructuras_de_datos.Edge;
+
+public class Viaje implements Comparable<Viaje>
 {
 
 	/**
@@ -13,12 +15,12 @@ public class Impulso implements Comparable<Impulso>
 	/**
 	 * Tiempo inicial.
 	 */
-	private String startTime;
+	private Date startTime;
 
 	/**
 	 * Tiempo final.
 	 */
-	private String stopTime;
+	private Date stopTime;
 
 	/**
 	 * Id de la bicicleta.
@@ -41,9 +43,14 @@ public class Impulso implements Comparable<Impulso>
 	private int gender;
 	
 	/**
+	 * Genero de ciclista.
+	 */
+	private Edge<Integer, Estacion, Ruta> arco;
+	
+	/**
 	 * Metodo constructor de la clase.
 	 */
-	public Impulso ( double pTripDuration, String pStartTime, String pStopTime,int pBikeId, String pUserType, int pBirthYear, int pGender)
+	public Viaje ( double pTripDuration, Date pStartTime, Date pStopTime, int pBikeId, String pUserType, int pBirthYear, int pGender)
 	{
 		tripDuration = pTripDuration;
 		startTime = pStartTime;
@@ -52,6 +59,7 @@ public class Impulso implements Comparable<Impulso>
 		usertype = pUserType;
 		birthYear = pBirthYear;
 		gender = pGender;
+		arco = null;
 	}
 
 	/**
@@ -64,11 +72,65 @@ public class Impulso implements Comparable<Impulso>
 	}
 	
 	/**
+	 * Da la edad.
+	 * @return Retorna la edad de la persona que realizó el viaje.
+	 */
+	public int darEdad( )
+	{
+		return 2020 - birthYear;
+	}
+	
+	/**
+	 * Da el tipo de suscripcion de la persona.
+	 * @return Tipo de subscripcion.
+	 */
+	public String darSubscripcion( )
+	{
+		return usertype;
+	}
+	
+	/**
+	 * Da el id de la bicicleta.
+	 * @return Id de la bicicleta.
+	 */
+	public int darId( )
+	{
+		return bikeId;
+	}
+	
+	/**
+	 * Da el tiempo de salida.
+	 * @return Tiempo de salida
+	 */
+	public Date darStartTime( )
+	{
+		return startTime;
+	}
+	
+	/**
+	 * Da el tiempo de llegada.
+	 * @return Tiempo de llegada
+	 */
+	public Date darStopTime( )
+	{
+		return stopTime;
+	}
+	/**
 	 * Metodo inutil
 	 */
-	public int compareTo(Impulso o) 
+	public int compareTo(Viaje o) 
 	{
 		return 0;
+	}
+
+	public void asignarSalida(Edge<Integer, Estacion, Ruta> arcoActual) 
+	{
+		arco = arcoActual;
+	}
+	
+	public Edge<Integer, Estacion, Ruta> darArco( )
+	{
+		return arco;
 	}
 
 	

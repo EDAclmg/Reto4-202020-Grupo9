@@ -4,7 +4,7 @@ import java.util.Date;
 
 import estructuras_de_datos.ArregloDinamico;
 
-public class Axon implements Comparable<Axon>
+public class Ruta implements Comparable<Ruta>
 {
 	/**
 	 * Duracion promedio del viaje.
@@ -52,13 +52,14 @@ public class Axon implements Comparable<Axon>
 	private double endStationLongitude;
 	
 	/**
-	 *  Arreglo de impulsos.
+	 *  Arreglo de viajes.
 	 */
-	private ArregloDinamico<Impulso> impulsos;
+	private ArregloDinamico<Viaje> viajes;
+	
 	/**
 	 * Metodo constructor de la clase.
 	 */
-	public Axon (double pTripAverage, int pStartStationId, String pStartStationName, double pStartStationLat, double pStartStationLong, int pEndStationId, String pEndStationName, double pEndStationLat, double pEndStationLong)
+	public Ruta (double pTripAverage, int pStartStationId, String pStartStationName, double pStartStationLat, double pStartStationLong, int pEndStationId, String pEndStationName, double pEndStationLat, double pEndStationLong)
 	{
 		tripAverage = pTripAverage;
 		startStationId = pStartStationId;
@@ -69,26 +70,26 @@ public class Axon implements Comparable<Axon>
 		endStationName = pEndStationName;
 		endStationLatitude = pEndStationLat;
 		endStationLongitude = pEndStationLong;
-		impulsos = new ArregloDinamico<Impulso>(5);
+		viajes = new ArregloDinamico<Viaje>(5);
 	}
 
 	/**
-	 * Agrega un impulso.
-	 * @param nuevo Nuevo impulso
+	 * Agrega un viaje.
+	 * @param nuevo Nuevo viaje
 	 */
-	public void agregarImpulso(Impulso nuevo) 
+	public void agregarViaje(Viaje nuevo) 
 	{
 		addToAverage(nuevo.getTime( ));
-		impulsos.addLast(nuevo);
+		viajes.addLast(nuevo);
 	}
 	
 	/**
 	 * Agrega un impulso.
 	 * @param nuevo Nuevo impulso
 	 */
-	public void impusloInicial(Impulso nuevo) 
+	public void viajeInicial(Viaje nuevo) 
 	{
-		impulsos.addLast(nuevo);
+		viajes.addLast(nuevo);
 	}
 	
 	/**
@@ -106,7 +107,7 @@ public class Axon implements Comparable<Axon>
 	 */
 	public void addToAverage(double nuevo)
 	{
-		tripAverage = (( tripAverage * impulsos.size( ) + nuevo ) / (impulsos.size( ) + 1 ));
+		tripAverage = (( tripAverage * viajes.size( ) + nuevo ) / (viajes.size( ) + 1 ));
 	}
 	
 	/**
@@ -128,9 +129,17 @@ public class Axon implements Comparable<Axon>
 	}
 	
 	/**
+	 * Retorna los viajes.
+	 * @return Viajes.
+	 */
+	public ArregloDinamico<Viaje> darViajes( )
+	{
+		return viajes;
+	}
+	/**
 	 * Metodo inutil
 	 */
-	public int compareTo(Axon o) 
+	public int compareTo(Ruta o) 
 	{
 		return 0;
 	}
